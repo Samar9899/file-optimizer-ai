@@ -20,11 +20,63 @@
         <section id="result-section">
             <h2>Optimization Result</h2>
             <div id="result-box"></div>
+            <button id="download-btn" style="display: none;">Download Optimized File</button>
         </section>
     </main>
     <footer>
         <p>&copy; 2025 File Optimizer AI. All rights reserved.</p>
     </footer>
-    <script src="script.js"></script>
+    <script>
+        // Get DOM elements
+        const fileInput = document.getElementById('file-input');
+        const optimizeBtn = document.getElementById('optimize-btn');
+        const resultBox = document.getElementById('result-box');
+        const downloadBtn = document.getElementById('download-btn');
+
+        // Variable to store optimized file blob
+        let optimizedFileBlob = null;
+
+        // Handle optimization
+        optimizeBtn.addEventListener('click', function() {
+            const file = fileInput.files[0];
+            if (!file) {
+                resultBox.innerHTML = 'Please select a file first!';
+                return;
+            }
+
+            // Simple simulation of file optimization
+            resultBox.innerHTML = 'Optimizing file...';
+            
+            setTimeout(() => {
+                // Simulate file optimization process
+                const fileName = file.name.split('.')[0];
+                const fileExtension = file.name.split('.').pop();
+                const optimizedFileName = `${fileName}_optimized.${fileExtension}`;
+
+                // Create a blob with sample optimized content
+                // In real implementation, this would contain actual optimized content
+                optimizedFileBlob = new Blob([`Optimized version of ${file.name}`], {
+                    type: file.type
+                });
+
+                resultBox.innerHTML = `File optimized successfully!<br>Original size: ${file.size} bytes<br>Optimized size: ${optimizedFileBlob.size} bytes`;
+                downloadBtn.style.display = 'block';
+            }, 1000); // Simulate 1 second processing time
+        });
+
+        // Handle download
+        downloadBtn.addEventListener('click', function() {
+            if (optimizedFileBlob) {
+                const url = window.URL.createObjectURL(optimizedFileBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileInput.files[0].name.replace('.', '_optimized.');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            }
+        });
+    </script>
 </body>
 </html>
